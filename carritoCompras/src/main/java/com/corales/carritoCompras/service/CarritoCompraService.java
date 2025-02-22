@@ -77,5 +77,7 @@ public class CarritoCompraService implements ICarritoCompraService{
     public void deleteProducto(Long numeroIdentificacion, Long codigoProducto) {
         CarritoCompra carritoCompra = iCarritoCompraRepository.findById(numeroIdentificacion).orElseThrow(() -> new CarritoCompraNoExisteException("El carrito de compras no existe"));
         carritoCompra.getProductos().removeIf(codigo -> Objects.equals(codigo, codigoProducto));
+        carritoCompra.setPrecioTotal(carritoCompra.getPrecioTotal() - iProductoApiClient.getProducto(codigoProducto).getPrecio());
+        iCarritoCompraRepository.save(carritoCompra);
     }
 }

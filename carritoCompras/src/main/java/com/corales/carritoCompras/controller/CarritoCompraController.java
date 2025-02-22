@@ -24,9 +24,10 @@ public class CarritoCompraController {
         return ResponseEntity.ok("El producto se agrego correctamente en el carrito de compras con el identificacior: " + numeroIdentificacion);
     }
 
-    @DeleteMapping("/delete/{codigoProducto}")
-    public ResponseEntity<?> delete(@PathVariable Long codigoProducto){
-        return ResponseEntity.ok(null);
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam Long numeroIdentificacion, @RequestParam Long codigoProducto){
+        iCarritoCompraService.deleteProducto(numeroIdentificacion, codigoProducto);
+        return ResponseEntity.ok("El producto se elimino correctamente del carrito de compras");
     }
 
 }
