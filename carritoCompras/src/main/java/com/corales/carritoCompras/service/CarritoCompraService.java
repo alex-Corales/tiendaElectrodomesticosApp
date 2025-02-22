@@ -12,8 +12,10 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.xml.catalog.Catalog;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -50,19 +52,18 @@ public class CarritoCompraService implements ICarritoCompraService{
         return new CarritoCompraResponseDTO(null, 0.0);
     }
 
+    private Long createCarritoCompra(){
+        return iCarritoCompraRepository.save(new CarritoCompra()).getNumeroIdentificacion();
+    }
+
     @Override
     @CircuitBreaker(name = "producto", fallbackMethod = "fallbackGetProductosNumeroIdentificacion")
     @Retry(name = "producto")
-    public Long save(CarritoCompra carritoCompra) {
-        double montoTotal = 0.0;
-
-        for(Long numeroIdentificacion : carritoCompra.getProductos()){
-            ProductoDTO producto = obtenerProductoConRetry(numeroIdentificacion);
-            montoTotal += producto.getPrecio();
-        }
-
-        carritoCompra.setPrecioTotal(montoTotal);
-
+    public Long addProducto(Long numeroIdentificacion, Long codigoProducto) {
+        if(numeroIdentificacion == null) numeroIdentificacion = createCarritoCompra();
+        CarritoCompra carritoCompra = iCarritoCompraRepository.findById(numeroIdentificacion).orElseThrow(() -> new CarritoCompraNoExisteException("El carrito de compras que ingreso no existe"));
+        carritoCompra.getProductos().add(codigoProducto);
+        carritoCompra.setPrecioTotal(carritoCompra.getPrecioTotal() + iProductoApiClient.getProducto(codigoProducto).getPrecio());
         return iCarritoCompraRepository.save(carritoCompra).getNumeroIdentificacion();
     }
 
@@ -73,7 +74,8 @@ public class CarritoCompraService implements ICarritoCompraService{
 
 
     @Override
-    public void delete(Long codigoProducto) {
-
+    public void deleteProducto(Long numeroIdentificacion, Long codigoProducto) {
+        CarritoCompra carritoCompra = iCarritoCompraRepository.findById(numeroIdentificacion).orElseThrow(() -> new CarritoCompraNoExisteException("El carrito de compras no existe"));
+        carritoCompra.getProductos().removeIf(codigo -> Objects.equals(codigo, codigoProducto));
     }
 }

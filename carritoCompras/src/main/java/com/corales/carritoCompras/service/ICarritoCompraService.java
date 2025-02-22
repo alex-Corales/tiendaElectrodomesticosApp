@@ -5,6 +5,6 @@ import com.corales.carritoCompras.model.CarritoCompra;
 
 public interface ICarritoCompraService {
     CarritoCompraResponseDTO getCarritodCompra(Long numeroIdentificacion);
-    Long save(CarritoCompra carritoCompra);
-    void delete(Long codigoProducto);
+    Long addProducto(Long numeroIdentificacion, Long codigoProducto);
+    void deleteProducto(Long numeroIndentificacion, Long codigoProducto);
 }

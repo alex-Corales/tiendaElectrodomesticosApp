@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -18,5 +20,6 @@ public class CarritoCompra {
     private Long numeroIdentificacion;
     private double precioTotal;
     @ElementCollection
-    private List<Long> productos;
+    private List<Long> productos = new ArrayList<>();
+
 }

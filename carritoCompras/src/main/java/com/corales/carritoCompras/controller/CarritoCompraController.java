@@ -19,8 +19,9 @@ public class CarritoCompraController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody CarritoCompra carritoCompra){
-        return ResponseEntity.ok("El numero de identificacion de su carrito es: "+ iCarritoCompraService.save(carritoCompra));
+    public ResponseEntity<?> save(@RequestParam(required = false) Long numeroIdentificacion, @RequestParam Long codigoProducto){
+        numeroIdentificacion = iCarritoCompraService.addProducto(numeroIdentificacion, codigoProducto);
+        return ResponseEntity.ok("El producto se agrego correctamente en el carrito de compras con el identificacior: " + numeroIdentificacion);
     }
 
     @DeleteMapping("/delete/{codigoProducto}")
