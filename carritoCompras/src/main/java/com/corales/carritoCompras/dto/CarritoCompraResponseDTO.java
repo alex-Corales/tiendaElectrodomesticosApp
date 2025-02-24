@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarritoCompraResponseDTO{
-    private List<ProductoDTO> productoDTOS;
+    private List<ProductoDTO> listaProductos;
     private double total;
 }
