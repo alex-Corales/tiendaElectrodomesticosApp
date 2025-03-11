@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.corales</groupId>
 	<artifactId>venta</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>venta</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
