@@ -1,0 +1,65 @@
+services:
+  eureka-sv:
+    build: eureka-sv
+    mem_limit: 512m
+    ports:
+      - "8761:8761"
+    networks:
+      - 'tiendaelectrodomestico-network'
+  
+  producto:
+    build: producto
+    mem_limit: 512m
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/servicio_productos
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 
+    depends_on:
+      - mysql
+    networks:
+      - 'tiendaelectrodomestico-network'
+  
+  carritocompras:
+    build: carritoCompras
+    mem_limit: 512m
+    ports:
+      - "8082:8082"
+    networks:
+      - 'tiendaelectrodomestico-network'
+  
+  venta:
+    build: venta
+    mem_limit: 512m
+    ports:
+      - "8083:8083"
+    networks:
+      - 'tiendaelectrodomestico-network'
+  
+  api-gateway:
+    build: api-gateway
+    mem_limit: 512m
+    ports:
+      - "8443:8443"
+    networks:
+      - 'tiendaelectrodomestico-network'
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: servicio_productos
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - 'tiendaelectrodomestico-network'
+
+networks:
+  tiendaelectrodomestico-network:
+
+volumes:
+  mysql-data:
